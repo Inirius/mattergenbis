@@ -44,7 +44,7 @@ GPU=${14:-None}
 
 if [ "$ALG" == "True" ]; then
     al=2
-    SUF="_guided2_" 
+    SUF="_guided3_" 
 else
     al=1
     SUF="_guided_"

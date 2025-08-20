@@ -278,7 +278,6 @@ class PredictorCorrector(Generic[Diffusable]):
             # Set the timestep
             t = torch.full((batch.get_batch_size(),), timesteps[i], device=self._device)
 
-            """""
             # Corrector updates.
             if self._correctors:
                 for _ in range(self._n_steps_corrector):
@@ -298,7 +297,7 @@ class PredictorCorrector(Generic[Diffusable]):
                     batch, mean_batch = _mask_replace(
                         samples_means=samples_means, batch=batch, mean_batch=mean_batch, mask=mask
                     )
-            """""
+
             score = self._score_fn(batch, t)
 
             if self.diffusion_loss_fn is not None and (t < self._multi_corruption.T * 0.9).all():
@@ -333,7 +332,8 @@ class PredictorCorrector(Generic[Diffusable]):
                 batch_, mean_batch_ = _mask_replace(
                     samples_means=samples_means, batch=batch, mean_batch=mean_batch, mask=mask
                 ) #z_t-1
-
+                
+                """
                 ############## Algorithm 3 ############
                 # Corrector updates.
                 if self._correctors and self.algo:
@@ -355,7 +355,8 @@ class PredictorCorrector(Generic[Diffusable]):
                             samples_means=samples_means, batch=batch_, mean_batch=mean_batch_, mask=mask
                         )
                 ############## Algorithm 3 ############
-                
+                """
+
                 # Renoise the batch fieldwise
                 fns = {
                     k: self.forward_corruption
@@ -374,7 +375,6 @@ class PredictorCorrector(Generic[Diffusable]):
 
                 ############## Algorithm 2 ############
                 # Corrector updates.
-                """
                 if self._correctors and self.algo:
                     for _ in range(self._n_steps_corrector):
                         score = self._score_fn(batch, t)
@@ -393,7 +393,6 @@ class PredictorCorrector(Generic[Diffusable]):
                         batch, mean_batch = _mask_replace(
                             samples_means=samples_means, batch=batch, mean_batch=mean_batch, mask=mask
                         )
-                """
                 ############## Algorithm 2 ############
 
                 score = self._score_fn(batch, t)
